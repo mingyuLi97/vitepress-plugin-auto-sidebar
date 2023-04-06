@@ -10,6 +10,8 @@ export default defineConfig({
       VitePluginAutoSidebar({
         sidebarResolved(value) {
           console.log(JSON.stringify(value, null, 2));
+          value["/dir2/"][0].items?.sort((a, b) => a.text - b.text);
+          value["/dir2/"][0].text = 'sorted'
         },
         ignores: ["index.md"],
         root: process.cwd(),
