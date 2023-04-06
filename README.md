@@ -33,13 +33,17 @@ npm install @limy-org/vite-plugin-vitepress-auto-sidebar
 
 ```ts
 // .vitepress/config.ts
-import VitePluginAutoSidebar from "vite-plugin-vitepress-auto-sidebar";
+import VitePluginAutoSidebar from "@limy-org/vite-plugin-vitepress-auto-sidebar";
 export default defineConfig({
   vite: {
     plugins: [
       VitePluginAutoSidebar({
         sidebarResolved(value) {
           console.log(value);
+          // do sort
+          value["/dir2/"][0].items?.sort((a, b) => a.text - b.text);
+          // rename
+          value["/dir2/"][0].text = 'sorted'
         },
         ignores: ["index.md"],
         root: process.cwd(),
