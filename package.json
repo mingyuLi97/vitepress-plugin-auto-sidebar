@@ -1,10 +1,11 @@
 {
-  "name": "vite-plugin-vitepress-auto-sidebar",
+  "name": "@limy-org/vite-plugin-vitepress-auto-sidebar",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automatically generate VitePress sidebar",
   "scripts": {
     "build": "unbuild"
   },
+  "homepage": "https://github.com/mingyuLi97/vite-plugin-vitepress-auto-sidebar",
   "type": "module",
   "exports": {
     ".": {
@@ -17,7 +18,13 @@
   "files": [
     "dist"
   ],
-  "keywords": [],
+  "keywords": [
+    "vite-plugin",
+    "vitepress",
+    "sidebar",
+    "auto sidebar",
+    "autobar"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

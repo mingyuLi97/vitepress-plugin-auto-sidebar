@@ -9,9 +9,10 @@ export default defineConfig({
     plugins: [
       VitePluginAutoSidebar({
         sidebarResolved(value) {
-          console.log(value);
+          console.log(JSON.stringify(value, null, 2));
         },
-        // ignores: ["index.md"],
+        ignores: ["index.md"],
+        root: process.cwd(),
       }),
     ],
   },
