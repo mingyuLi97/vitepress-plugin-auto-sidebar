@@ -1,6 +1,6 @@
 {
-  "name": "@limy-org/vite-plugin-vitepress-auto-sidebar",
-  "version": "1.0.1",
+  "name": "@iminu/vitepress-plugin-auto-sidebar",
+  "version": "1.0.0",
   "description": "Automatically generate VitePress sidebar",
   "scripts": {
     "build": "unbuild"

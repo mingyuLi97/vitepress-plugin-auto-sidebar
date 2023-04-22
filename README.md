@@ -1,12 +1,12 @@
-<h2 align='center'><samp>vite-plugin-vitepress-auto-sidebar</samp></h2>
+<h2 align='center'><samp>vitepress-plugin-auto-sidebar</samp></h2>
 
 <p align='center'>Automatically generate VitePress sidebar</p>
 
 <p align='center'>
-  <a href='https://www.npmjs.com/package/@limy-org/vite-plugin-vitepress-auto-sidebar'>
-    <img src='https://img.shields.io/npm/v/@limy-org/vite-plugin-vitepress-auto-sidebar?color=222&style=flat-square'>
+  <a href='https://www.npmjs.com/package/@iminu/vitepress-plugin-auto-sidebar'>
+    <img src='https://img.shields.io/npm/v/@iminu/vitepress-plugin-auto-sidebar?color=222&style=flat-square'>
   </a>
-  <a href='https://github.com/mingyuLi97/vite-plugin-vitepress-auto-sidebar/blob/master/LICENSE'>
+  <a href='https://github.com/mingyuLi97/vitepress-plugin-auto-sidebar/blob/master/LICENSE'>
     <img src='https://img.shields.io/badge/license-MIT-blue.svg'>
   </a>
 </p>
@@ -22,28 +22,28 @@
 
 ```bash
 # pnpm
-pnpm i @limy-org/vite-plugin-vitepress-auto-sidebar
+pnpm i @iminu/vitepress-plugin-auto-sidebar
 # yarn
-yarn add @limy-org/vite-plugin-vitepress-auto-sidebar
+yarn add @iminu/vitepress-plugin-auto-sidebar
 # npm
-npm install @limy-org/vite-plugin-vitepress-auto-sidebar
+npm install @iminu/vitepress-plugin-auto-sidebar
 ```
 
 ## Usage
 
 ```ts
 // .vitepress/config.ts
-import VitePluginAutoSidebar from "@limy-org/vite-plugin-vitepress-auto-sidebar";
+import AutoSidebar from "@iminu/vitepress-plugin-auto-sidebar";
 export default defineConfig({
   vite: {
     plugins: [
-      VitePluginAutoSidebar({
+      AutoSidebar({
         sidebarResolved(value) {
           console.log(value);
           // do sort
           value["/dir2/"][0].items?.sort((a, b) => a.text - b.text);
           // rename
-          value["/dir2/"][0].text = 'sorted'
+          value["/dir2/"][0].text = "sorted";
         },
         ignores: ["index.md"],
         root: process.cwd(),
