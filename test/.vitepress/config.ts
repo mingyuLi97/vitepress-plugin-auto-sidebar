@@ -1,5 +1,6 @@
 import { defineConfig } from "vitepress";
-import VitePluginAutoSidebar from "@iminu/vitepress-plugin-auto-sidebar";
+// import VitePluginAutoSidebar from "@iminu/vitepress-plugin-auto-sidebar";
+import VitePluginAutoSidebar from "../../src";
 import path from "path";
 
 // https://vitepress.dev/reference/site-config
@@ -8,13 +9,15 @@ export default defineConfig({
   description: "test plugin",
   vite: {
     plugins: [
+      //@ts-ignore
       VitePluginAutoSidebar({
         sidebarResolved(value) {
-          value["/demo/dir2/"][0].items?.sort((a, b) => a.text - b.text);
-          value["/demo/dir2/"][0].text = "sorted";
+          console.log(value);
+          // value["/demo/dir2/"][0].items?.sort((a, b) => a.text - b.text);
+          // value["/demo/dir2/"][0].text = "sorted";
         },
         ignores: ["index.md"],
-        root: path.resolve(process.cwd(), "demo"),
+        docs: path.resolve(process.cwd(), "demo"),
       }),
     ],
   },
