@@ -19,9 +19,9 @@ importers:
 
   test:
     specifiers:
-      vite-plugin-vitepress-auto-sidebar: workspace:*
+      '@iminu/vitepress-plugin-auto-sidebar': workspace:*
     devDependencies:
-      vite-plugin-vitepress-auto-sidebar: link:..
+      '@iminu/vitepress-plugin-auto-sidebar': link:..
 
 packages:
 

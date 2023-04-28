@@ -21,6 +21,7 @@ export interface AutoSidebarOptions {
 }
 
 const titleCache: Record<string, string> = {};
+const pwd = process.cwd();
 
 export default function VitePluginAutoSidebar(
   options: AutoSidebarOptions = {}
@@ -48,7 +49,7 @@ export default function VitePluginAutoSidebar(
         }
         if (event === "change") {
           const title = matchTitle(filePath);
-          const route = "/" + path.relative(root, filePath);
+          const route = getRoute(filePath);
           if (!route || !title) return;
           // 未更新 title
           if (title === titleCache[route]) return;
@@ -65,51 +66,46 @@ function getSidebarConfig(root: string, opts: AutoSidebarOptions) {
     cwd: root,
     ignore: opts.ignores,
   });
-  const obj: Record<string, string[][]> = {};
+
+  const basePath = path.relative(pwd, root);
   const sidebar: DefaultTheme.SidebarMulti = {};
-  // build first
-  for (const path of paths) {
-    const pathSegments = path.split("/");
-    if (pathSegments[0].endsWith(".md")) continue;
-    const key = "/" + pathSegments[0] + "/";
-    const data = pathSegments.slice(1);
-    if (!obj[key]) {
-      obj[key] = [];
+
+  paths.forEach((fullPath) => {
+    const segments = fullPath.split("/");
+    const absolutePath = path.resolve(root, fullPath);
+    if (segments.length === 0) return;
+    // { "/demo/dir1/":[]}
+    const topLevel = basePath
+      ? `/${basePath}/${segments.shift()}/`
+      : `/${segments.shift()}/`;
+    // 如果第一级是文件
+    if (topLevel.endsWith(".md")) return;
+    if (!sidebar[topLevel]) {
+      sidebar[topLevel] = [];
     }
-    obj[key].push(data);
-  }
-
-  // resolve sidebar
-  for (const key of Object.keys(obj)) {
-    const data = obj[key];
-    const result: any[] = [];
-    for (const pathSegments of data) {
-      let currentLevel = result;
-
-      for (const segment of pathSegments) {
-        let existingPath = currentLevel.find((item) => item.text === segment);
-        if (!existingPath) {
-          const itemConfig: DefaultTheme.SidebarItem = {};
-          // is file
-          if (segment.endsWith(".md")) {
-            const route = key + pathSegments.join("/");
-            itemConfig.text = matchTitle(path.join(root, route));
-            itemConfig.link = route;
-            // cache title
-            titleCache[route] = itemConfig.text;
-          } else {
-            itemConfig.text = segment;
-            itemConfig.collapsed = false;
-            itemConfig.items = [];
-          }
-          currentLevel.push(itemConfig);
-          existingPath = itemConfig;
+    let currentLevel = sidebar[topLevel];
+    segments.forEach((segment) => {
+      let curConfig = currentLevel.find((item) => item.text === segment);
+      if (!curConfig) {
+        const itemConfig: DefaultTheme.SidebarItem = {};
+        // is file
+        if (segment.endsWith(".md")) {
+          const route = getRoute(absolutePath);
+          itemConfig.text = matchTitle(absolutePath);
+          itemConfig.link = route;
+          // cache title
+          titleCache[route] = itemConfig.text;
+        } else {
+          itemConfig.text = segment;
+          itemConfig.collapsed = false;
+          itemConfig.items = [];
         }
-        currentLevel = existingPath.items;
+        currentLevel.push(itemConfig);
+        curConfig = itemConfig;
       }
-    }
-    sidebar[key] = result;
-  }
+      currentLevel = curConfig.items as DefaultTheme.SidebarItem[];
+    });
+  });
   if (opts.sidebarResolved) {
     opts.sidebarResolved(sidebar);
   }
@@ -119,4 +115,8 @@ function getSidebarConfig(root: string, opts: AutoSidebarOptions) {
 function matchTitle(p: string) {
   const content = fs.readFileSync(p, "utf-8");
   return ((content.match(/^#(.*)\n?/) || [])[1] || "").trim();
+}
+
+function getRoute(absPath: string) {
+  return "/" + path.relative(pwd, absPath);
 }

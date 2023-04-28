@@ -1,5 +1,6 @@
 import { defineConfig } from "vitepress";
-import VitePluginAutoSidebar from "vite-plugin-vitepress-auto-sidebar";
+import VitePluginAutoSidebar from "@iminu/vitepress-plugin-auto-sidebar";
+import path from "path";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -9,12 +10,11 @@ export default defineConfig({
     plugins: [
       VitePluginAutoSidebar({
         sidebarResolved(value) {
-          console.log(JSON.stringify(value, null, 2));
-          value["/dir2/"][0].items?.sort((a, b) => a.text - b.text);
-          value["/dir2/"][0].text = 'sorted'
+          value["/demo/dir2/"][0].items?.sort((a, b) => a.text - b.text);
+          value["/demo/dir2/"][0].text = "sorted";
         },
         ignores: ["index.md"],
-        root: process.cwd(),
+        root: path.resolve(process.cwd(), "demo"),
       }),
     ],
   },
@@ -22,8 +22,8 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
-      { text: "dir1", link: "/dir1/dir1-1/1" },
-      { text: "dir2", link: "/dir2/2-2/2" },
+      { text: "dir1", link: "/demo/dir1/dir1-1/1" },
+      { text: "dir2", link: "/demo/dir2/2-2/2" },
     ],
 
     socialLinks: [
