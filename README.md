@@ -38,15 +38,22 @@ export default defineConfig({
   vite: {
     plugins: [
       AutoSidebar({
+        /**
+         * after resolve, we can change it
+         */
         sidebarResolved(value) {
-          console.log(value);
           // do sort
           value["/dir2/"][0].items?.sort((a, b) => a.text - b.text);
           // rename
           value["/dir2/"][0].text = "sorted";
         },
         ignores: ["index.md"],
-        root: process.cwd(),
+        // Which files are included
+        docs: path.resolve(process.cwd(), "docs/demo"),
+        /**
+         * .vitepress parent folder
+         */
+        root: path.resolve(process.cwd(), "docs"),,
       }),
     ],
   },

@@ -13,28 +13,28 @@ export interface AutoSidebarOptions {
   /**
    * doc dir
    */
-  root?: string;
+  docs?: string;
   /**
    * ignore some file
    */
   ignores?: string[];
+  /**
+   * .vitepress 所在的文件夹
+   */
+  root?: string;
 }
 
 const titleCache: Record<string, string> = {};
-const pwd = process.cwd();
 
 export default function VitePluginAutoSidebar(
   options: AutoSidebarOptions = {}
 ) {
-  const root = options.root || process.cwd();
+  const opts = normalizeOptions(options);
   return <Plugin>{
     name: "VitePluginAutoSidebar",
     config(config) {
       // @ts-ignore
-      config.vitepress.site.themeConfig.sidebar = getSidebarConfig(
-        root,
-        options
-      );
+      config.vitepress.site.themeConfig.sidebar = getSidebarConfig(opts);
       return config;
     },
     configureServer: ({ watcher, restart }: ViteDevServer) => {
@@ -49,7 +49,7 @@ export default function VitePluginAutoSidebar(
         }
         if (event === "change") {
           const title = matchTitle(filePath);
-          const route = getRoute(filePath);
+          const route = getRoute(opts.root, filePath);
           if (!route || !title) return;
           // 未更新 title
           if (title === titleCache[route]) return;
@@ -61,18 +61,19 @@ export default function VitePluginAutoSidebar(
   };
 }
 
-function getSidebarConfig(root: string, opts: AutoSidebarOptions) {
+function getSidebarConfig(opts: Required<AutoSidebarOptions>) {
+  const docsPath = opts.docs;
   const paths = glob.sync("**/*.md", {
-    cwd: root,
+    cwd: docsPath,
     ignore: opts.ignores,
   });
 
-  const basePath = path.relative(pwd, root);
+  const basePath = path.relative(opts.root, docsPath);
   const sidebar: DefaultTheme.SidebarMulti = {};
 
   paths.forEach((fullPath) => {
     const segments = fullPath.split("/");
-    const absolutePath = path.resolve(root, fullPath);
+    const absolutePath = path.resolve(docsPath, fullPath);
     if (segments.length === 0) return;
     // { "/demo/dir1/":[]}
     const topLevel = basePath
@@ -90,7 +91,7 @@ function getSidebarConfig(root: string, opts: AutoSidebarOptions) {
         const itemConfig: DefaultTheme.SidebarItem = {};
         // is file
         if (segment.endsWith(".md")) {
-          const route = getRoute(absolutePath);
+          const route = getRoute(opts.root, absolutePath);
           itemConfig.text = matchTitle(absolutePath);
           itemConfig.link = route;
           // cache title
@@ -117,6 +118,35 @@ function matchTitle(p: string) {
   return ((content.match(/^#(.*)\n?/) || [])[1] || "").trim();
 }
 
-function getRoute(absPath: string) {
-  return "/" + path.relative(pwd, absPath);
+function getRoute(root: string, absPath: string) {
+  return "/" + path.relative(root, absPath);
+}
+
+/**
+ * 将用户的配置加上默认属性
+ * TODO：支持多种配置类型
+ */
+function normalizeOptions(
+  options: AutoSidebarOptions
+): Required<AutoSidebarOptions> {
+  let root = options.root;
+  if (!root) {
+    const files = glob.sync("**/.vitepress/config.*", {
+      cwd: process.cwd(),
+      dot: true,
+      ignore: ["node_modules/**/*"],
+    });
+
+    if (files.length !== 1) {
+      console.error("[WARNING] 找到多个 .vitepress/config 配置文件", files);
+    }
+    root = path.resolve(files[0], "../..");
+  }
+
+  return {
+    root,
+    docs: options.docs || root,
+    ignores: options.ignores ?? [],
+    sidebarResolved: options.sidebarResolved ?? function () {},
+  };
 }
