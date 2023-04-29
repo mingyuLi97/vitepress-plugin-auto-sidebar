@@ -4,14 +4,15 @@
 
 <p align='center'>
   <a href='https://www.npmjs.com/package/@iminu/vitepress-plugin-auto-sidebar'>
-    <img src='https://img.shields.io/npm/v/@iminu/vitepress-plugin-auto-sidebar?color=222&style=flat-square'>
+    <img src='https://img.shields.io/npm/v/@iminu/vitepress-plugin-auto-sidebar?color=#4fc08d&style=flat-square'>
   </a>
   <a href='https://github.com/mingyuLi97/vitepress-plugin-auto-sidebar/blob/master/LICENSE'>
     <img src='https://img.shields.io/badge/license-MIT-blue.svg'>
   </a>
 </p>
-
-**English | [简体中文](./README.zh-CN.md)**
+<p align="center">
+English | 🇨🇳 <a href="./README.zh-CN.md">中文版介绍</a>
+</p>
 
 <p align="center">
   <img src="demo.gif" width="100%" alt="demo"/>
