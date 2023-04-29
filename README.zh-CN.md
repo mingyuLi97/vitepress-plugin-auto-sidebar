@@ -1,7 +1,6 @@
 <h2 align='center'><samp>vitepress-plugin-auto-sidebar</samp></h2>
 
-<p align='center'>Automatically generate VitePress sidebar</p>
-
+<p align='center'>自动生成 vitepress 的 sidebar</p>
 <p align='center'>
   <a href='https://www.npmjs.com/package/@iminu/vitepress-plugin-auto-sidebar'>
     <img src='https://img.shields.io/npm/v/@iminu/vitepress-plugin-auto-sidebar?color=222&style=flat-square'>
@@ -11,20 +10,18 @@
   </a>
 </p>
 
-**English | [简体中文](./README.zh-CN.md)**
-
 <p align="center">
   <img src="demo.gif" width="100%" alt="demo"/>
 </p>
 
-## Features
+## 功能
 
-- 🪄 Automatic sidebar generation
-- ✨ Title of files synchronized with sidebar
-- 🚀 Automatic reload when files are deleted or title is modified
-- ✔️ Customizable configuration options (custom directory names, custom file sorting).
+- 🪄 自动生成 sidebar
+- ✨ 将文件一级标题自动同步到 sidebar
+- 🚀 当文件删除、修改名称时自动同步到 sidebar
+- ✔️ 支持对产生的 sidebar 配置做自定义修改（改名称、排序...）
 
-## Installation
+## 安装
 
 ```bash
 # pnpm
@@ -35,7 +32,7 @@ yarn add @iminu/vitepress-plugin-auto-sidebar
 npm install @iminu/vitepress-plugin-auto-sidebar
 ```
 
-## Usage
+## 使用
 
 ```ts
 // .vitepress/config.ts
@@ -66,7 +63,9 @@ export default defineConfig({
 });
 ```
 
-## How it work
+## 原理
+
+更多原理见 [🌟 Vitepress 侧边栏自动生成，让你更专注写作](https://juejin.cn/post/7227358177489961018/)
 
 ```
 ├── .vitepress
